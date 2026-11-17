@@ -1,0 +1,167 @@
+{
+  "schema_version": 1,
+  "kind": "verify",
+  "started_at": "2026-11-17T04:30:16Z",
+  "finished_at": "2026-11-17T04:30:17Z",
+  "failures": 14,
+  "checks": [
+    {
+      "section": "Shell",
+      "name": "zsh is installed",
+      "ok": false,
+      "detail": null
+    },
+    {
+      "section": "Boot",
+      "name": "the user session exists",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Boot",
+      "name": "user services survive the last terminal (linger)",
+      "ok": false,
+      "detail": null
+    },
+    {
+      "section": "Boot",
+      "name": "/tmp is on disk, not in memory",
+      "ok": false,
+      "detail": null
+    },
+    {
+      "section": "Boot",
+      "name": "WSL waits for a slow boot (initTimeout)",
+      "ok": false,
+      "detail": null
+    },
+    {
+      "section": "Boot",
+      "name": "Windows directories are kept off PATH",
+      "ok": false,
+      "detail": null
+    },
+    {
+      "section": "Shell",
+      "name": "the login shell is zsh",
+      "ok": false,
+      "detail": null
+    },
+    {
+      "section": "Shell",
+      "name": "no alias hides a real command (non-interactive shell)",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Shell",
+      "name": "no alias hides a real command (interactive shell)",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Shell",
+      "name": "an interactive shell starts without printing",
+      "ok": false,
+      "detail": null
+    },
+    {
+      "section": "Shell",
+      "name": "an interactive shell starts in under 300 ms",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Shell",
+      "name": "no Windows directory is on PATH",
+      "ok": false,
+      "detail": null
+    },
+    {
+      "section": "Tools",
+      "name": "a clean shell finds every tool",
+      "ok": false,
+      "detail": "missing: claude jq rg zsh node uv gh glab just pre-commit gitleaks starship socat"
+    },
+    {
+      "section": "Tools",
+      "name": "the machine matches its config (no drift)",
+      "ok": false,
+      "detail": "/home/dylan/projects/personal/systems/workstation/machine/verify.sh: line 83: mise: comman"
+    },
+    {
+      "section": "Tools",
+      "name": "tool versions are locked",
+      "ok": false,
+      "detail": null
+    },
+    {
+      "section": "Tools",
+      "name": "a chosen Windows program starts by name",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Secrets",
+      "name": "no shell exports a secret",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Docker",
+      "name": "docker wakes on first use",
+      "ok": false,
+      "detail": null
+    },
+    {
+      "section": "Docker",
+      "name": "docker does not start at boot",
+      "ok": false,
+      "detail": null
+    },
+    {
+      "section": "Sandbox for agents",
+      "name": "the sandbox runtime is installed",
+      "ok": false,
+      "detail": null
+    }
+  ],
+  "metrics": [
+    {
+      "name": "interactive_shell_startup",
+      "value": 25.0,
+      "unit": "ms"
+    },
+    {
+      "name": "tools_required",
+      "value": 17.0,
+      "unit": "count"
+    }
+  ],
+  "machine": {
+    "schema_version": 1,
+    "hostname": "DESKTOP-DEV0137",
+    "os": "Ubuntu 26.04.1 LTS",
+    "kernel": "6.18.58.1-microsoft-standard-WSL2",
+    "wsl": true,
+    "processors": 8,
+    "memory_mib": {
+      "total": 8939,
+      "available": 5392
+    },
+    "tmp_filesystem": "tmpfs",
+    "gpu": "NVIDIA GeForce RTX 2060, 6144 MiB",
+    "tools": {},
+    "sandbox": {
+      "bubblewrap": "bubblewrap 0.11.1",
+      "socat": null,
+      "ripgrep": null,
+      "sandbox_runtime": null
+    },
+    "docker": {
+      "version": "The command 'docker' could not be found in this WSL 2 distro.",
+      "running": false,
+      "wakes_on_first_use": false
+    }
+  }
+}

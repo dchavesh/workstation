@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "kind": "rehearsal",
+  "run_id": "20261117T042947Z",
+  "result": "passed",
+  "repo_commit": "16814ed",
+  "uncommitted_files": 3,
+  "lock_file_unchanged": true,
+  "total_seconds": 166,
+  "steps": [
+    {
+      "name": "empty lab",
+      "seconds": 27
+    },
+    {
+      "name": "copy machine/ into the lab",
+      "seconds": 2
+    },
+    {
+      "name": "health check on the empty machine (must fail)",
+      "seconds": 1
+    },
+    {
+      "name": "install",
+      "seconds": 130
+    },
+    {
+      "name": "health check after install",
+      "seconds": 6
+    },
+    {
+      "name": "apply a second time (must change nothing)",
+      "seconds": 0
+    },
+    {
+      "name": "lock file",
+      "seconds": 0
+    }
+  ]
+}

@@ -76,6 +76,7 @@ def docker_state():
 def main():
     description = {
         "schema_version": SCHEMA_VERSION,
+        "hostname": platform.node(),
         "os": key_value_file("/etc/os-release", "=").get("PRETTY_NAME"),
         "kernel": platform.release(),
         "wsl": "microsoft" in platform.release().lower(),

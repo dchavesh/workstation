@@ -1,0 +1,110 @@
+
+=== empty lab
+lab: created with login user 'dylan'
+--- empty lab: 27 s
+
+=== copy machine/ into the lab
+config.toml config.wsl.toml describe dotfiles install.sh mise.lock system verify.sh 
+--- copy machine/ into the lab: 2 s
+
+=== health check on the empty machine (must fail)
+Sandbox for agents
+  FAIL  the sandbox runtime is installed
+
+14 check(s) failed
+--- health check on the empty machine (must fail): 1 s
+
+=== install
+mise lock            glab@1.130.0 linux-arm64-musl
+mise lock            glab@1.130.0 linux-x64
+mise lock            glab@1.130.0 linux-arm64
+mise lock            gh@2.104.0 linux-x64
+mise lock            gh@2.104.0 linux-arm64
+mise lock            glab@1.130.0 windows-x64
+mise lock            just@1.59.0 linux-arm64-musl
+mise lock            just@1.59.0 linux-arm64
+mise lock            just@1.59.0 linux-x64
+mise lock            glab@1.130.0 macos-x64
+mise lock            just@1.59.0 linux-x64-musl
+mise lock            glab@1.130.0 macos-arm64
+mise lock            glab@1.130.0 linux-x64-musl
+mise lock            gh@2.104.0 linux-arm64-musl
+mise lock            just@1.59.0 macos-arm64
+mise lock            pre-commit@4.7.0 linux-arm64-musl
+mise lock            just@1.59.0 macos-x64
+mise lock            pre-commit@4.7.0 linux-x64
+mise lock            gitleaks@8.30.1 linux-arm64
+mise lock            just@1.59.0 windows-x64
+mise lock            gitleaks@8.30.1 linux-arm64-musl
+mise lock            pre-commit@4.7.0 macos-arm64
+mise lock            pre-commit@4.7.0 linux-x64-musl
+mise lock            gitleaks@8.30.1 linux-x64-musl
+mise lock            gitleaks@8.30.1 macos-arm64
+mise lock            pre-commit@4.7.0 linux-arm64
+mise lock            starship@1.27.0 linux-arm64
+mise lock            gitleaks@8.30.1 macos-x64
+mise lock            starship@1.27.0 linux-x64
+mise lock            gitleaks@8.30.1 windows-x64
+mise lock            starship@1.27.0 linux-x64-musl
+mise lock            starship@1.27.0 macos-arm64
+mise lock            pre-commit@4.7.0 windows-x64
+mise lock            starship@1.27.0 windows-x64
+mise lock            starship@1.27.0 macos-x64
+mise lock            starship@1.27.0 linux-arm64-musl
+mise lock            pre-commit@4.7.0 macos-x64
+mise lock            gitleaks@8.30.1 linux-x64
+mise lock          ✓ 56 targets checked
+install: done. Restart the machine (WSL: wsl --shutdown), then run machine/verify.sh
+--- install: 130 s
+
+=== health check after install
+Boot
+  ok    the user session exists
+  ok    user services survive the last terminal (linger)
+  ok    /tmp is on disk, not in memory
+  ok    WSL waits for a slow boot (initTimeout)
+  ok    Windows directories are kept off PATH
+Shell
+  ok    the login shell is zsh
+  ok    no alias hides a real command (non-interactive shell)
+  ok    no alias hides a real command (interactive shell)
+  ok    an interactive shell starts without printing
+  ok    an interactive shell starts in under 300 ms
+        interactive_shell_startup: 60 ms
+  ok    no Windows directory is on PATH
+Tools
+  ok    a clean shell finds every tool
+        tools_required: 17 count
+  ok    the machine matches its config (no drift)
+  ok    tool versions are locked
+  ok    a chosen Windows program starts by name
+Secrets
+  ok    no shell exports a secret
+Docker
+  ok    docker wakes on first use
+  ok    docker does not start at boot
+Sandbox for agents
+  ok    the runtime is owned by root
+  ok    the login user cannot rewrite the runtime
+  ok    it starts on this kernel
+        sandbox_startup: 269 ms
+  ok    tools work inside it
+  ok    a denied file cannot be read
+  ok    nothing outside the project can be written
+  ok    an unlisted host cannot be reached
+  ok    docker cannot be reached
+  ok    Windows programs cannot be started
+
+all checks passed
+--- health check after install: 6 s
+
+=== apply a second time (must change nothing)
+mise ⇢ gitleaks@latest    0ms · already installed
+mise ⇢ starship@latest    0ms · already installed
+mise ████████████████ 8/8 · installed 0 tools · 8 already installed in 1ms
+mise all tools are installed
+--- apply a second time (must change nothing): 0 s
+
+=== lock file
+lock file unchanged: 8 tools at the locked versions
+--- lock file: 0 s

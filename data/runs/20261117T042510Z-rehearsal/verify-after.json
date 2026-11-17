@@ -1,0 +1,223 @@
+{
+  "schema_version": 1,
+  "kind": "verify",
+  "started_at": "2026-11-17T04:28:50Z",
+  "finished_at": "2026-11-17T04:28:54Z",
+  "failures": 0,
+  "checks": [
+    {
+      "section": "Boot",
+      "name": "the user session exists",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Boot",
+      "name": "user services survive the last terminal (linger)",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Boot",
+      "name": "/tmp is on disk, not in memory",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Boot",
+      "name": "WSL waits for a slow boot (initTimeout)",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Boot",
+      "name": "Windows directories are kept off PATH",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Shell",
+      "name": "the login shell is zsh",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Shell",
+      "name": "no alias hides a real command (non-interactive shell)",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Shell",
+      "name": "no alias hides a real command (interactive shell)",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Shell",
+      "name": "an interactive shell starts without printing",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Shell",
+      "name": "an interactive shell starts in under 300 ms",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Shell",
+      "name": "no Windows directory is on PATH",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Tools",
+      "name": "a clean shell finds every tool",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Tools",
+      "name": "the machine matches its config (no drift)",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Tools",
+      "name": "tool versions are locked",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Tools",
+      "name": "a chosen Windows program starts by name",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Secrets",
+      "name": "no shell exports a secret",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Docker",
+      "name": "docker wakes on first use",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Docker",
+      "name": "docker does not start at boot",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Sandbox for agents",
+      "name": "the runtime is owned by root",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Sandbox for agents",
+      "name": "the login user cannot rewrite the runtime",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Sandbox for agents",
+      "name": "it starts on this kernel",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Sandbox for agents",
+      "name": "tools work inside it",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Sandbox for agents",
+      "name": "a denied file cannot be read",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Sandbox for agents",
+      "name": "nothing outside the project can be written",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Sandbox for agents",
+      "name": "an unlisted host cannot be reached",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Sandbox for agents",
+      "name": "docker cannot be reached",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "section": "Sandbox for agents",
+      "name": "Windows programs cannot be started",
+      "ok": true,
+      "detail": null
+    }
+  ],
+  "metrics": [
+    {
+      "name": "interactive_shell_startup",
+      "value": 63.0,
+      "unit": "ms"
+    },
+    {
+      "name": "tools_required",
+      "value": 17.0,
+      "unit": "count"
+    },
+    {
+      "name": "sandbox_startup",
+      "value": 273.0,
+      "unit": "ms"
+    }
+  ],
+  "machine": {
+    "schema_version": 1,
+    "hostname": "DESKTOP-DEV0137",
+    "os": "Ubuntu 26.04.1 LTS",
+    "kernel": "6.18.58.1-microsoft-standard-WSL2",
+    "wsl": true,
+    "processors": 8,
+    "memory_mib": {
+      "total": 8939,
+      "available": 5411
+    },
+    "tmp_filesystem": "ext4",
+    "gpu": null,
+    "tools": {
+      "gh": "2.104.0",
+      "gitleaks": "8.30.1",
+      "glab": "1.130.0",
+      "just": "1.59.0",
+      "node": "26.13.1",
+      "pre-commit": "4.7.0",
+      "starship": "1.27.0",
+      "uv": "0.13.8"
+    },
+    "sandbox": {
+      "bubblewrap": "bubblewrap 0.11.1",
+      "socat": "socat version 1.8.1.1 on 03 Jul 2026 12:41:00",
+      "ripgrep": "ripgrep 15.1.0",
+      "sandbox_runtime": "0.0.83"
+    },
+    "docker": {
+      "version": "Docker version 29.10.0, build fdd4b8e",
+      "running": false,
+      "wakes_on_first_use": true
+    }
+  }
+}
