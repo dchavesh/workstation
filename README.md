@@ -37,7 +37,13 @@ Every choice goes through the same steps and is recorded in `research/`:
   script, the health check (`verify.sh`) and the machine description
   (`describe`). First run: `machine/install.sh wsl`. Afterwards:
   `mise bootstrap`.
+- `windows/` — the Windows half: the app list for winget (`apps.json`), the
+  install script (`install.ps1`, with `-DryRun`), and the steps for the first
+  real test on the laptop (`LAPTOP-TEST.md`).
+- `data/runs/` — what each test run produced, as JSON: one directory per
+  run, named by its UTC start time. Written by the scripts, never by hand.
 - `research/` — baseline measurements and one page per decision.
+  `EVIDENCE.md` lists every test and how well its result is backed.
 - `lab/` — scripts that create, provision and destroy the `lab` distro.
   `lab/rehearse.sh` rebuilds it from an empty image and runs the health check.
 

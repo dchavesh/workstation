@@ -169,6 +169,32 @@ Facts collected, read-only:
 Tested from WSL, outside the sandbox: PowerShell, cmd, explorer, clip and wsl
 start by name; Windows files can be read and written.
 
+Which Windows apps the owner actually runs, read on 2026-11-16 with the
+owner's permission from Windows' own per-user usage record (UserAssist; it
+goes back to April 2026 and only sees programs started from the Start menu,
+taskbar or Explorer, not from a terminal):
+
+| Last used | Apps |
+|-----------|------|
+| This week | Chrome (several profiles), Windows Terminal, WhatsApp, Notepad, Snipping Tool, Calculator, Paint |
+| Last 3 weeks | Discord, VS Code, NVIDIA App, Photos |
+| 2–3 months ago | Docker Desktop (10 Sep, once), PowerShell, Edge, Spotify (3 Aug) |
+| April–July | PicPick, Corsair iCUE |
+| No launch on record | Cursor, Android Studio, Claude desktop, Teams, Outlook, Microsoft 365 Copilot |
+
+Proposed app list for a new machine, following "Windows is the desktop":
+
+- **Install:** Chrome, VS Code, WhatsApp, Discord; the NVIDIA app where there
+  is an NVIDIA card (both machines); Spotify if wanted.
+- **Already part of Windows:** Terminal, Notepad, Snipping Tool, Calculator,
+  Paint, Photos, Edge, PowerShell, winget, WSL.
+- **Not installed:** Docker Desktop (the engine lives in WSL), Cursor,
+  Android Studio, Claude desktop, Teams, Outlook, Microsoft 365 Copilot,
+  PicPick. iCUE only on the PC, if its keyboard or lighting needs it.
+- **Command-line tools now on Windows** (Git, Node.js, Java 17) belong in
+  WSL under this division. Git for Windows is added only if Claude Code is
+  also installed natively on Windows, where it is recommended.
+
 Candidate, not yet tested: winget for Windows apps (it is part of Windows 11
 and each vendor publishes there), and one PowerShell script for WSL itself,
 `.wslconfig` and the terminal. `winget configure`, Microsoft's declarative
