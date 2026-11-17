@@ -3,7 +3,8 @@
 # that lab/rehearse.sh has built. Each test writes its own record under
 # data/runs/. A test that fails does not stop the others.
 #
-# Left out on purpose: android-emulator.sh (downloads about 5 GB) and
+# Left out on purpose: android-emulator.sh (downloads about 5 GB),
+# agent-sessions.sh and browser.sh (several minutes of waits or downloads), and
 # boot-race.sh (prints a table and needs several minutes of cold boots).
 set -uo pipefail
 
@@ -14,6 +15,7 @@ readonly TESTS=(
   resource-limits
   sandbox-windows
   npm-package-weight
+  worktrees
   docker-idle-cost
   windows-path-cost
   tmp-on-disk-boot

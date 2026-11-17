@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "kind": "test",
+  "test": "agent-sessions",
+  "question": "Does an agent's work outlive the terminal that started it, and can it be seen and reached again?",
+  "started_at": "2026-11-17T06:16:59Z",
+  "repo_commit": "6ddf8e5",
+  "uncommitted_script_files": 0,
+  "facts": {
+    "started": true,
+    "listed_by_name_pattern": 1,
+    "memory_reported_bytes": 2121728,
+    "processor_time_reported_ns": 20342000,
+    "memory_cap_reported": 268435456,
+    "tmux_session_started_in_capped_unit": true,
+    "running_seen_from_another_terminal": true,
+    "output_readable_from_file": true,
+    "tmux_session_seen_from_another_terminal": true,
+    "tmux_screen_readable_from_another_terminal": true,
+    "after_gap_without_terminals_still_running": true,
+    "after_gap_without_terminals_tmux_alive": true,
+    "after_gap_without_terminals_longest_pause_s": 3,
+    "distro_state_after_gap_without_terminals": "Running",
+    "gap_seconds": 45,
+    "restarted_for_second_wait": true,
+    "after_gap_with_one_session_open_still_running": true,
+    "after_gap_with_one_session_open_longest_pause_s": 3,
+    "distro_state_after_gap_with_one_session_open": "Running",
+    "distro_state_after_gap_with_nothing_running": "Stopped",
+    "without_linger_started": true,
+    "without_linger_after_gap_still_running": false,
+    "without_linger_after_gap_longest_pause_s": 1,
+    "without_linger_heartbeats_written": 17,
+    "distro_state_after_gap_without_linger": "Stopped"
+  },
+  "machine": {
+    "schema_version": 1,
+    "hostname": "DESKTOP-DEV0137",
+    "os": "Ubuntu 26.04.1 LTS",
+    "kernel": "6.18.58.1-microsoft-standard-WSL2",
+    "wsl": true,
+    "processors": 8,
+    "memory_mib": {
+      "total": 8939,
+      "available": 4658
+    },
+    "tmp_filesystem": "ext4",
+    "gpu": "NVIDIA GeForce RTX 2060, 6144 MiB",
+    "tools": {
+      "gh": "2.104.0",
+      "gitleaks": "8.30.1",
+      "glab": "1.130.0",
+      "just": "1.59.0",
+      "node": "26.13.1",
+      "pre-commit": "4.7.0",
+      "starship": "1.27.0",
+      "uv": "0.13.8"
+    },
+    "sandbox": {
+      "bubblewrap": "bubblewrap 0.11.1",
+      "socat": "socat version 1.8.1.1 on 03 Jul 2026 12:41:00",
+      "ripgrep": "ripgrep 15.1.0",
+      "sandbox_runtime": "0.0.83"
+    },
+    "docker": {
+      "version": "Docker version 29.10.0, build fdd4b8e",
+      "running": false,
+      "wakes_on_first_use": true
+    }
+  }
+}

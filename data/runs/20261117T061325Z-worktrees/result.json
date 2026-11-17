@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "kind": "test",
+  "test": "worktrees",
+  "question": "Can several agents share one repository through git worktrees and shared package caches without colliding?",
+  "started_at": "2026-11-17T06:13:25Z",
+  "repo_commit": "d66136d",
+  "uncommitted_script_files": 0,
+  "facts": {
+    "repository_history_mb": 1,
+    "create_one_worktree_ms": 7,
+    "worktree_mb_before_dependencies": 1,
+    "same_branch_in_two_worktrees_refused": true,
+    "tools_run_in_new_worktree_without_approval": false,
+    "tools_run_in_worktree_after_approval": true,
+    "npm_install_empty_cache_ms": 751,
+    "uv_install_empty_cache_ms": 480,
+    "npm_install_at_once_agents_succeeded": 3,
+    "npm_install_at_once_slowest_ms": 1035,
+    "uv_install_at_once_agents_succeeded": 3,
+    "uv_install_at_once_slowest_ms": 54,
+    "agents": 3,
+    "node_modules_one_worktree_mb": 31,
+    "node_modules_all_worktrees_mb": 92,
+    "python_environment_one_worktree_mb": 3,
+    "python_environment_all_worktrees_mb": 3,
+    "commit_at_once_agents_succeeded": 3,
+    "commit_at_once_slowest_ms": 13,
+    "commits_in_repository": 4,
+    "repository_passes_integrity_check": true
+  },
+  "machine": {
+    "schema_version": 1,
+    "hostname": "DESKTOP-DEV0137",
+    "os": "Ubuntu 26.04.1 LTS",
+    "kernel": "6.18.58.1-microsoft-standard-WSL2",
+    "wsl": true,
+    "processors": 8,
+    "memory_mib": {
+      "total": 8939,
+      "available": 3251
+    },
+    "tmp_filesystem": "ext4",
+    "gpu": "NVIDIA GeForce RTX 2060, 6144 MiB",
+    "tools": {
+      "gh": "2.104.0",
+      "gitleaks": "8.30.1",
+      "glab": "1.130.0",
+      "just": "1.59.0",
+      "node": "26.13.1",
+      "pre-commit": "4.7.0",
+      "starship": "1.27.0",
+      "uv": "0.13.8"
+    },
+    "sandbox": {
+      "bubblewrap": "bubblewrap 0.11.1",
+      "socat": "socat version 1.8.1.1 on 03 Jul 2026 12:41:00",
+      "ripgrep": "ripgrep 15.1.0",
+      "sandbox_runtime": "0.0.83"
+    },
+    "docker": {
+      "version": "Docker version 29.10.0, build fdd4b8e",
+      "running": false,
+      "wakes_on_first_use": true
+    }
+  }
+}

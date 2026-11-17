@@ -13,7 +13,7 @@ chat, or as an agent's word.
   research page named, but the commands were not saved. Today the only raw
   record is the session transcript. These are the weak entries.
 
-**State of the evidence:** 35 entries. 19 are backed by a script or a check,
+**State of the evidence:** 37 entries. 21 are backed by a script or a check,
 5 are reading with sources, 11 are one-off.
 
 **Data files:** since 2026-11-16 every rehearsal writes a record under
@@ -63,6 +63,8 @@ that gap is the next piece of work (see the end of this page).
 | T22 | 16 Nov | Does the Windows install script read a machine's state correctly without changing it? | Dry run on the PC: found winget, WSL, the lab distro and its user; would write `.wslconfig` with 9 GB; reported Chrome as missing although it is installed (winget cannot see that install). **The apply path has never run** | script: `windows/install.ps1 -DryRun`; apply is for the laptop (`windows/LAPTOP-TEST.md`) |
 | T23 | 16 Nov | Can an Android emulator run inside WSL with no window, driven from the command line? | Yes: Android 15 booted in 36 s with KVM, used 3.3 GB of memory, answered a key press and a tap, and gave a screenshot. The SDK takes 4.8 GB | script + **data**: `lab/tests/android-emulator.sh` (record includes `screen.png`) |
 | T24 | 16 Nov | With one capped unit per agent, is a runaway agent stopped while the others finish? | Yes: three workloads finished in 1.77–1.83 s beside a runaway one (1.62 s alone); the runaway asked for 3 GB under a 1 GB cap and did not get it | script + **data**: `lab/tests/parallel-agents.sh` |
+| T25 | 17 Nov | Can several agents share one repository through git worktrees and shared package caches? | Yes: three installs and three commits at once all succeeded; a worktree costs 7 ms and 1 MB; npm dependencies are copied (31 MB each), Python ones shared. Tools are refused in a new worktree until its config is approved | script + **data**: `lab/tests/worktrees.sh` |
+| T26 | 17 Nov | Does an agent's work outlive the terminal, and can it be seen and reached again? | With linger on: yes, through 45 s with no terminal, and WSL keeps the distro up for it. With linger off it dies after about 15 s. With nothing running WSL stops the distro. Units are listed with memory and processor use; a tmux session in a capped unit is readable from another terminal | script + **data**: `lab/tests/agent-sessions.sh` |
 
 ## Read-only measurements on the daily distro and on Windows
 

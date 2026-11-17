@@ -101,13 +101,17 @@ Read on 2026-11-13 by a research pass. *docs* = official documentation.
    (measured in `00-lab-stock-image.md`: 20 ms per failed lookup, and Windows
    `npm` standing in for a missing Linux one).
 5. **Linger on**, for a different reason than the race: it starts the user's
-   services at boot and keeps them when the last terminal closes.
+   services at boot and keeps them when the last terminal closes. Tested on
+   2026-11-17: with linger on, work survived 45 s with no terminal attached;
+   with linger off it died after about 15 s (`05-parallel-agents.md`).
 
 ## Proposed, not yet tested
 
 - `.wslconfig`: keep `memory=9GB` and `processors=8`; smaller swap in a fixed
   location; drop `sparseVhd` (experimental) and `vmIdleTimeout`;
-  `instanceIdleTimeout=-1` so background agents are not stopped.
+  ~~`instanceIdleTimeout=-1`~~ dropped on 2026-11-17: with linger on, WSL
+  keeps the distro up while an agent's work runs and stops it afterwards
+  (`lab/tests/agent-sessions.sh`, `05-parallel-agents.md`).
 - Remove or disable on the stock image: `wsl-pro-service`, snapd,
   landscape-client, cloud-init after first boot, `motd-news`, rsyslog; stop
   apt's catch-up runs right after boot.
