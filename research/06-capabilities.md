@@ -50,6 +50,25 @@ escape the 9 GB cap). iOS needs a remote Mac.
 | Device group IDs versus the distro's groups | match in the lab (kvm 991, render 990) |
 | Login user in `kvm`, `render`, `video`, `dialout` | none of them by default |
 
+Android emulator, tested in the lab on 2026-11-16
+(`lab/tests/android-emulator.sh`, record with a screenshot in `data/runs/`).
+Google does not support running it inside WSL, but it works here:
+
+| Measure | Result |
+|---------|--------|
+| Acceleration | KVM usable once the user is in the `kvm` group |
+| Boot, no window | Android 15 in 36 s |
+| Driven from the command line (`adb`) | key press, screen tap and screenshot all worked |
+| Memory | 3.3 GB while running, out of 9 GB for WSL |
+| Disk | 4.8 GB for the command-line SDK, emulator and one system image |
+
+So an agent in WSL can build an Android app, start an emulator, operate it
+and look at the screen, with no Android Studio and nothing on Windows. The
+cost is memory: one emulator is a third of the machine's WSL memory. It
+belongs in an opt-in profile, not in the base install. Not tested: a real
+phone (over Wi-Fi with `adb`, or over USB), the emulator's own window, and
+whether a sandboxed agent can reach `adb`.
+
 Browser, tested in the lab on 2026-11-16 with Playwright's headless Chromium
 (installed in 21 s, 287 MB):
 

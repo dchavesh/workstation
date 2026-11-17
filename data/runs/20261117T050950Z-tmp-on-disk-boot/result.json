@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "kind": "test",
+  "test": "tmp-on-disk-boot",
+  "question": "With /tmp on disk and 100,000 files in it, is a cold boot fast and do the files survive?",
+  "started_at": "2026-11-17T05:09:50Z",
+  "facts": {
+    "tmp_filesystem": "ext4",
+    "entries_before_boot": 100101,
+    "size_mb_before_boot": 393,
+    "first_command_after_cold_boot_ms": 1592,
+    "user_session_present": true,
+    "tmpfiles_setup_time": "20ms",
+    "systemd_startup": "Startup finished in 943ms (userspace)",
+    "entries_after_boot": 100101
+  },
+  "machine": {
+    "schema_version": 1,
+    "hostname": "DESKTOP-DEV0137",
+    "os": "Ubuntu 26.04.1 LTS",
+    "kernel": "6.18.58.1-microsoft-standard-WSL2",
+    "wsl": true,
+    "processors": 8,
+    "memory_mib": {
+      "total": 8939,
+      "available": 5239
+    },
+    "tmp_filesystem": "ext4",
+    "gpu": "NVIDIA GeForce RTX 2060, 6144 MiB",
+    "tools": {
+      "gh": "2.104.0",
+      "gitleaks": "8.30.1",
+      "glab": "1.130.0",
+      "just": "1.59.0",
+      "node": "26.13.1",
+      "pre-commit": "4.7.0",
+      "starship": "1.27.0",
+      "uv": "0.13.8"
+    },
+    "sandbox": {
+      "bubblewrap": "bubblewrap 0.11.1",
+      "socat": "socat version 1.8.1.1 on 03 Jul 2026 12:41:00",
+      "ripgrep": "ripgrep 15.1.0",
+      "sandbox_runtime": "0.0.83"
+    },
+    "docker": {
+      "version": "Docker version 29.10.0, build fdd4b8e",
+      "running": false,
+      "wakes_on_first_use": true
+    }
+  }
+}

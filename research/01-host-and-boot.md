@@ -201,9 +201,11 @@ Proposed app list for a new machine, following "Windows is the desktop":
   PowerShell. They are removed. Claude Code for Windows is added only if a
   task turns up that an agent in WSL cannot do.
 - **Android Studio:** not launched since at least April. Agents need the
-  command-line Android SDK, not the IDE. Whether the emulator runs inside
-  WSL is being tested (`lab/tests/android-emulator.sh`); a phone, the
-  microphone and the webcam need hardware tests that have not been run.
+  command-line Android SDK, not the IDE. The emulator runs inside WSL: tested
+  on 2026-11-16 (`lab/tests/android-emulator.sh`, details in
+  `06-capabilities.md`). So Android work can live in WSL and Android Studio
+  is not needed on Windows for agents. A phone, the microphone and the webcam
+  need hardware tests that have not been run.
 
 The laptop is set up like the PC and is in use. Until it is formatted it is
 treated like the PC: tests there run in a `lab` distro and change nothing

@@ -13,9 +13,8 @@ chat, or as an agent's word.
   research page named, but the commands were not saved. Today the only raw
   record is the session transcript. These are the weak entries.
 
-**State of the evidence:** 33 entries. 9 are backed by a script or a check,
-5 are reading with sources, 19 are one-off (three of those are now partly
-covered by a check or by `machine/describe`).
+**State of the evidence:** 35 entries. 18 are backed by a script or a check,
+5 are reading with sources, 12 are one-off.
 
 **Data files:** since 2026-11-16 every rehearsal writes a record under
 `data/runs/<time>-rehearsal/` (the steps and their durations, every check
@@ -42,26 +41,28 @@ that gap is the next piece of work (see the end of this page).
 |---|------|----------|--------|----------|
 | T1 | 13 Nov | How long does a throwaway distro take to rebuild? | 23–36 s | script: `lab/lab` |
 | T2 | 13 Nov | What does a stock 26.04 image contain? | systemd 259, Rust coreutils and sudo, Python 3.14, `/tmp` in memory | script: `lab/measure.sh` → `00-lab-stock-image.md` |
-| T3 | 13 Nov | What do Windows directories on `PATH` cost? | 200 failed lookups: 4.00 s with them, 0.006 s without | one-off → `00-lab-stock-image.md` |
+| T3 | 13 Nov | What do Windows directories on `PATH` cost? | 200 failed lookups: 3.7 s with them, 0.045 s without (first measured as 4.00 s and 0.006 s) | script + **data**: `lab/tests/windows-path-cost.sh` |
 | T4 | 13 Nov | Does the boot race reproduce, and what fixes it? | Defaults: session missing. Linger alone: still missing at login. `initTimeout=60000`: present | script: `lab/tests/boot-race.sh` |
 | T5 | 13 Nov | Does the 24.04 `/tmp` rule delete at boot? | Rule `D` removed 100,100 entries; rule `d` removed none | one-off → `01-host-and-boot.md` |
-| T6 | 13 Nov | Do mise shims give every process the tools? | Yes; per-directory versions correct; 15.9 ms per call against 2.3 ms direct | one-off → `02-tools.md` |
-| T7 | 13 Nov | What runs in a repo nobody approved? | By default `mise exec`, `mise install` and `CI=1` run its script; paranoid mode refuses all | one-off → `02-tools.md` |
+| T6 | 13 Nov | Do mise shims give every process the tools? | Yes. Per call: 0.9 ms direct, 13.1 ms through a shim, 13.9 ms through `mise exec`. **The first note said 89.6 ms for `mise exec`; that did not reproduce** | script + **data**: `lab/tests/shim-cost.sh` |
+| T7 | 13 Nov | What runs in a repo nobody approved? | By default `mise exec`, `mise install` and `CI=1` run its script; paranoid mode refuses all | script + **data**: `lab/tests/mise-trust.sh` |
 | T8 | 13 Nov | Can mise's bootstrap own the machine config? | Apply, repeat, drift detection and repair worked in a first trial | one-off → `02-tools.md` (superseded by T18) |
-| T9 | 13 Nov | Does the kernel have the pieces for sandboxing and limits? | User namespaces, cgroup v2; a 64 MB cap stopped a 300 MB request; a 50 % CPU cap held | one-off → `03-isolation.md` |
+| T9 | 13 Nov | Does the kernel have the pieces for sandboxing and limits? | User namespaces, cgroup v2; a 64 MB cap stopped a 300 MB request; a 50 % CPU cap held | script + **data**: `lab/tests/resource-limits.sh` |
 | T10 | 13 Nov | Does one SSH agent serve every terminal? | Yes on 26.04: started on demand, one process, key kept across sessions | one-off → `04-keys-and-secrets.md` |
 | T11 | 13 Nov | Is the GPU visible in a fresh distro? | RTX 2060, 6 GB, no setup | one-off → `06-capabilities.md`; now in `machine/describe` |
 | T12 | 16 Nov | Do the tools run in a read-only, no-network box? | Yes, also in paranoid mode | one-off → `03-isolation.md`; covered by check "tools work inside it" |
-| T13 | 16 Nov | Can `/tmp` live on disk on 26.04 without slowing boot? | 100,101 files, cold boot 1.9 s, boot-time step 14 ms | one-off → `01-host-and-boot.md`; check covers only "on disk" |
+| T13 | 16 Nov | Can `/tmp` live on disk on 26.04 without slowing boot? | 100,101 files, cold boot 1.9 s, boot-time step 14 ms | script + **data**: `lab/tests/tmp-on-disk-boot.sh` |
 | T14 | 16 Nov | Does Anthropic's sandbox runtime work here? | Yes after adding ripgrep; decoy file, outside writes, unlisted host, Windows programs all refused; 0.22–0.33 s start-up | check: 9 sandbox checks in `verify.sh`; start-up time one-off |
-| T15 | 16 Nov | Can `gh` serve several identities without SSH? | One config with two accounts: no. One config per identity chosen by directory: yes, and no token outside | one-off (fake tokens) → `04-keys-and-secrets.md` |
-| T16 | 16 Nov | What does an idle Docker Engine cost, and can a sandboxed agent reach it? | 0 MB until first use; first run 2.9 s; then 217 MB; refused inside the sandbox | check: 3 Docker checks; timings and memory one-off → `01-host-and-boot.md` |
-| T17 | 16 Nov | What does a sandboxed process see of Windows? | Files readable, not writable; programs do not start | check (programs); read/write one-off → `03-isolation.md` |
+| T15 | 16 Nov | Can `gh` serve several identities without SSH? | One config with two accounts: no. One config per identity chosen by directory: yes, and no token outside | script + **data**: `lab/tests/gh-identities.sh` |
+| T16 | 16 Nov | What does an idle Docker Engine cost, and can a sandboxed agent reach it? | 0 MB until first use; first run 2.9 s; then 217 MB; refused inside the sandbox | script + **data**: `lab/tests/docker-idle-cost.sh` |
+| T17 | 16 Nov | What does a sandboxed process see of Windows? | Files readable, not writable; programs do not start | script + **data**: `lab/tests/sandbox-windows.sh` |
 | T18 | 16 Nov | Does one command build the machine from an empty image? | Before: 14–15 checks fail. Install 103–186 s. After: every check passes. Second apply changes nothing. Lock file unchanged | script + **data**: `lab/rehearse.sh`, records in `data/runs/` |
 | T19 | 16 Nov | Does Claude Code install from its own apt repository without touching its config? | 2.1.311 in 8 s; `~/.claude` not created | check ("a clean shell finds all tools"); the `~/.claude` part one-off |
 | T20 | 16 Nov | Does a browser work locally for agents? | Outside the sandbox: yes. Inside: only with its inner sandbox off, and it did not exit by itself | one-off → `06-capabilities.md`. **Inconclusive**, needs a proper test |
-| T21 | 16 Nov | What does Ubuntu's `npm` package bring with it? | 373 `node-*` packages, 92 MB | one-off → `02-tools.md` |
+| T21 | 16 Nov | What does Ubuntu's `npm` package bring with it? | 373 `node-*` packages, 92 MB | script + **data**: `lab/tests/npm-package-weight.sh` |
 | T22 | 16 Nov | Does the Windows install script read a machine's state correctly without changing it? | Dry run on the PC: found winget, WSL, the lab distro and its user; would write `.wslconfig` with 9 GB; reported Chrome as missing although it is installed (winget cannot see that install). **The apply path has never run** | script: `windows/install.ps1 -DryRun`; apply is for the laptop (`windows/LAPTOP-TEST.md`) |
+| T23 | 16 Nov | Can an Android emulator run inside WSL with no window, driven from the command line? | Yes: Android 15 booted in 36 s with KVM, used 3.3 GB of memory, answered a key press and a tap, and gave a screenshot. The SDK takes 4.8 GB | script + **data**: `lab/tests/android-emulator.sh` (record includes `screen.png`) |
+| T24 | 16 Nov | With one capped unit per agent, is a runaway agent stopped while the others finish? | Yes: three workloads finished in 1.77–1.83 s beside a runaway one (1.62 s alone); the runaway asked for 3 GB under a 1 GB cap and did not get it | script + **data**: `lab/tests/parallel-agents.sh` |
 
 ## Read-only measurements on the daily distro and on Windows
 
@@ -85,11 +86,15 @@ that gap is the next piece of work (see the end of this page).
 
 ## The gap, and what closes it
 
-- Nineteen results cannot be re-run from this repo. Each lab test among them
-  should become a saved test under `lab/tests/`.
-- Only the rehearsal and the health check write data. Each other test should
-  leave a file too (time, machine description, each outcome, timings), so
-  results can be compared across machines and dates instead of being
-  re-typed into prose.
-- The format of that data is Daedalus's decision (its section 8.6). This repo
-  should emit plain JSON that Daedalus can take in.
+- Twelve entries are still one-off. Six are observations of the old machine
+  and of Windows (I2, I7, M1-M4): they describe a state at one moment and are
+  not repeated. T5, T8 and T10 concern things the design no longer uses
+  (Ubuntu 24.04's `/tmp` rule, the first trial, the SSH agent). T11 and T12
+  are now covered by `machine/describe` and by a health check.
+- **T20, the browser inside the sandbox, is the one open test.** It needs a
+  proper test driven by Playwright before anything relies on it.
+- T19 has no check of its own for "installing Claude Code creates no
+  `~/.claude`"; it should become a step of the rehearsal.
+- `lab/tests/run-all.sh` runs the nine converted tests in one go; each writes
+  its own record. The format of that data is Daedalus's decision (its section
+  8.6). This repo emits plain JSON that Daedalus can take in.

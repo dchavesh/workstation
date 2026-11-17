@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "kind": "test",
+  "test": "parallel-agents",
+  "question": "With one capped unit per agent, does a runaway agent get stopped while the others finish?",
+  "started_at": "2026-11-17T05:10:59Z",
+  "facts": {
+    "memory_cap_per_agent": "1G",
+    "cpu_cap_per_agent": "200%",
+    "memory_available_mb_before": 5108,
+    "one_worker_alone_seconds": 1.62,
+    "worker_1_seconds_beside_runaway": 1.77,
+    "worker_2_seconds_beside_runaway": 1.83,
+    "worker_3_seconds_beside_runaway": 1.79,
+    "workers_started": 3,
+    "workers_finished": 3,
+    "runaway_got_its_memory": false,
+    "runaway_exit_code": 1,
+    "memory_available_mb_after": 5088
+  },
+  "machine": {
+    "schema_version": 1,
+    "hostname": "DESKTOP-DEV0137",
+    "os": "Ubuntu 26.04.1 LTS",
+    "kernel": "6.18.58.1-microsoft-standard-WSL2",
+    "wsl": true,
+    "processors": 8,
+    "memory_mib": {
+      "total": 8939,
+      "available": 5078
+    },
+    "tmp_filesystem": "ext4",
+    "gpu": "NVIDIA GeForce RTX 2060, 6144 MiB",
+    "tools": {
+      "gh": "2.104.0",
+      "gitleaks": "8.30.1",
+      "glab": "1.130.0",
+      "just": "1.59.0",
+      "node": "26.13.1",
+      "pre-commit": "4.7.0",
+      "starship": "1.27.0",
+      "uv": "0.13.8"
+    },
+    "sandbox": {
+      "bubblewrap": "bubblewrap 0.11.1",
+      "socat": "socat version 1.8.1.1 on 03 Jul 2026 12:41:00",
+      "ripgrep": "ripgrep 15.1.0",
+      "sandbox_runtime": "0.0.83"
+    },
+    "docker": {
+      "version": "Docker version 29.10.0, build fdd4b8e",
+      "running": false,
+      "wakes_on_first_use": true
+    }
+  }
+}

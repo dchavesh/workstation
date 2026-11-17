@@ -52,7 +52,7 @@ Ubuntu 26.04.1 in the `lab` distro, 2026-11-13.
 | Same shell with the shims directory on `PATH` | all found and working, no hooks needed |
 | Per-directory versions through shims | parent 22, child 24, home 26 — correct in each |
 | `[env]` values through shims | reach the tool, not the shell itself |
-| Cost per tool call | direct 2.3 ms, through a shim 15.9 ms, `mise exec` 89.6 ms |
+| Cost per tool call | direct 0.9 ms, through a shim 13.1 ms, `mise exec` 13.9 ms (saved test `lab/tests/shim-cost.sh`, 2026-11-16). The first one-off measurement gave 2.3, 15.9 and 89.6 ms; the 89.6 ms for `mise exec` did not reproduce |
 | Lock file | `mise lock --global` writes checksums for every platform |
 | Update visibility | `mise outdated --bump` listed `just 1.40.0 → 1.59.0` |
 
