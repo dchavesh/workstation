@@ -5,10 +5,7 @@
       "Packages": [
         { "PackageIdentifier": "Google.Chrome" },
         { "PackageIdentifier": "Microsoft.VisualStudioCode" },
-        { "PackageIdentifier": "Discord.Discord" },
-        { "PackageIdentifier": "Git.Git" },
-        { "PackageIdentifier": "GitHub.cli" },
-        { "PackageIdentifier": "Anthropic.ClaudeCode" }
+        { "PackageIdentifier": "Discord.Discord" }
       ],
       "SourceDetails": {
         "Argument": "https://cdn.winget.microsoft.com/cache",

@@ -128,7 +128,9 @@ from what the old machine happened to have installed.
 ## Rollout
 
 The first real install is the owner's **laptop**. The PC stays untouched as
-the fallback until the laptop proves the setup. There is no fixed format date:
+the fallback until the laptop proves the setup. Today the laptop is set up
+like the PC and is in use: until the day it is formatted, tests there run in
+a throwaway `lab` distro and change nothing else, exactly as on the PC. There is no fixed format date:
 nothing is formatted until the setup is tested. One repo therefore has to
 serve two machines, so machine-specific values (memory, processors, GPU) are
 parameters, not constants.

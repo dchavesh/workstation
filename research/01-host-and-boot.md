@@ -184,16 +184,30 @@ taskbar or Explorer, not from a terminal):
 
 Proposed app list for a new machine, following "Windows is the desktop":
 
-- **Install:** Chrome, VS Code, WhatsApp, Discord; the NVIDIA app where there
-  is an NVIDIA card (both machines); Spotify if wanted.
+- **Install (agreed by the owner):** Chrome, VS Code, WhatsApp, Discord. The
+  NVIDIA app comes with the graphics driver; Spotify if wanted.
 - **Already part of Windows:** Terminal, Notepad, Snipping Tool, Calculator,
   Paint, Photos, Edge, PowerShell, winget, WSL.
 - **Not installed:** Docker Desktop (the engine lives in WSL), Cursor,
   Android Studio, Claude desktop, Teams, Outlook, Microsoft 365 Copilot,
   PicPick. iCUE only on the PC, if its keyboard or lighting needs it.
 - **Command-line tools now on Windows** (Git, Node.js, Java 17) belong in
-  WSL under this division. Git for Windows is added only if Claude Code is
-  also installed natively on Windows, where it is recommended.
+  WSL under this division and are not installed on Windows.
+- **Corrected on 2026-11-16:** a first version of `apps.json` added Git, the
+  GitHub CLI and Claude Code for Windows. None came from the owner's usage.
+  They were there to fetch this private repo on a fresh Windows and to run
+  an agent natively on Windows. Neither is needed: the distro's own git
+  fetches the repo, and an agent in WSL already drives Windows through
+  PowerShell. They are removed. Claude Code for Windows is added only if a
+  task turns up that an agent in WSL cannot do.
+- **Android Studio:** not launched since at least April. Agents need the
+  command-line Android SDK, not the IDE. Whether the emulator runs inside
+  WSL is being tested (`lab/tests/android-emulator.sh`); a phone, the
+  microphone and the webcam need hardware tests that have not been run.
+
+The laptop is set up like the PC and is in use. Until it is formatted it is
+treated like the PC: tests there run in a `lab` distro and change nothing
+else (`windows/LAPTOP-TEST.md`).
 
 Candidate, not yet tested: winget for Windows apps (it is part of Windows 11
 and each vendor publishes there), and one PowerShell script for WSL itself,

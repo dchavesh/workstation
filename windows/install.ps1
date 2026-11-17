@@ -16,11 +16,21 @@
   restart, creating the Linux user, or typing the sudo password. Run it again
   afterwards; steps already done are skipped.
 
+  It never assumes an empty machine. It only adds: it removes no app, touches
+  no existing distro, and leaves an existing .wslconfig alone unless told
+  otherwise.
+
 .PARAMETER DryRun
   Report the current state and what would change. Changes nothing.
 
 .PARAMETER DistroName
-  Name of the WSL distro to create or use.
+  Name of the WSL distro to create or use. On a machine that already has a
+  distro in use, give a new name so the existing one is not involved.
+
+.PARAMETER ReplaceWslConfig
+  Replace an existing .wslconfig that differs from the proposal (a backup is
+  kept). .wslconfig applies to every distro on the machine, so without this
+  switch an existing file is only reported, never changed.
 
 .EXAMPLE
   powershell -ExecutionPolicy Bypass -File windows\install.ps1 -DryRun
@@ -28,7 +38,8 @@
 [CmdletBinding()]
 param(
     [switch]$DryRun,
-    [string]$DistroName = 'Ubuntu-26.04'
+    [string]$DistroName = 'Ubuntu-26.04',
+    [switch]$ReplaceWslConfig
 )
 
 Set-StrictMode -Version Latest
@@ -87,8 +98,13 @@ function Get-WantedWslConfig {
 function Set-WslConfig {
     $wanted = Get-WantedWslConfig
     $current = if (Test-Path $WslConfigPath) { Get-Content -Raw -Path $WslConfigPath } else { '' }
-    if (($current -replace '\s', '') -eq ($wanted -replace '\s', '')) { Write-Ok ".wslconfig is as wanted ($(($wanted -split "`r`n")[1]))"; return }
-    Write-Change "write .wslconfig with $(($wanted -split "`r`n")[1])$(if ($current) { '; the current file is kept as a backup' })"
+    $proposal = ($wanted -split "`r`n")[1]
+    if (($current -replace '\s', '') -eq ($wanted -replace '\s', '')) { Write-Ok ".wslconfig is as wanted ($proposal)"; return }
+    if ($current -and -not $ReplaceWslConfig) {
+        Write-State 'kept' ".wslconfig exists and differs from the proposal ($proposal); left as it is. It applies to every distro; use -ReplaceWslConfig to replace it."
+        return
+    }
+    Write-Change "write .wslconfig with $proposal$(if ($current) { '; the current file is kept as a backup' })"
     if ($DryRun) { return }
     if ($current) { Copy-Item -Path $WslConfigPath -Destination "$WslConfigPath.before-$(Get-Date -Format 'yyyyMMdd-HHmmss')" }
     Set-Content -Path $WslConfigPath -Value $wanted -Encoding ASCII -NoNewline
@@ -140,10 +156,11 @@ function Copy-RepoIntoDistro {
     if ($LASTEXITCODE -eq 0) { Write-Ok "the repo is in the distro at ~/$RepoPathInDistro"; return }
     Write-Change "clone this repo into the distro at ~/$RepoPathInDistro"
     if ($DryRun) { return }
+    # Uses the git inside the distro, so Windows needs no git of its own. A
+    # folder downloaded as a ZIP has no history and is copied instead.
     $windowsPath = $RepoRoot -replace '\\', '/'
-    $origin = (git -C $RepoRoot remote get-url origin 2>$null)
-    $code = Invoke-InDistro "set -e; source=`$(wslpath -a '$windowsPath'); mkdir -p `$(dirname $RepoPathInDistro); git clone --quiet `"`$source`" $RepoPathInDistro; if [ -n '$origin' ]; then git -C $RepoPathInDistro remote set-url origin '$origin'; fi"
-    if ($code -ne 0) { throw 'Could not clone the repo into the distro.' }
+    $code = Invoke-InDistro "set -e; source=`$(wslpath -a '$windowsPath'); mkdir -p `$(dirname $RepoPathInDistro); if [ -d `"`$source/.git`" ]; then origin=`$(git -C `"`$source`" remote get-url origin 2>/dev/null || true); git clone --quiet `"`$source`" $RepoPathInDistro; if [ -n `"`$origin`" ]; then git -C $RepoPathInDistro remote set-url origin `"`$origin`"; fi; else cp -r `"`$source`" $RepoPathInDistro; fi"
+    if ($code -ne 0) { throw 'Could not put the repo into the distro.' }
 }
 
 function Install-LinuxSide {
