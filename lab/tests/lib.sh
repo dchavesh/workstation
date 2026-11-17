@@ -70,8 +70,12 @@ write_test_record() {
   machine="$(test_lab user /dev/stdin <<<"$TEST_DESCRIBE" 2>/dev/null | tr -d '\0' || true)"
   run_dir="$TEST_REPO_DIR/data/runs/$TEST_RUN_STAMP-$name"
   mkdir -p "$run_dir"
+  # Which version of the test produced the record: the commit, and whether
+  # the scripts had changes that were not committed yet.
   printf '%s\n' "$facts" | RECORD_TEST="$name" RECORD_QUESTION="$question" RECORD_STARTED_AT="$TEST_STARTED_AT" \
-    RECORD_SCHEMA="$TEST_SCHEMA_VERSION" RECORD_MACHINE="$machine" python3 -I -c '
+    RECORD_SCHEMA="$TEST_SCHEMA_VERSION" RECORD_MACHINE="$machine" \
+    RECORD_COMMIT="$(git -C "$TEST_REPO_DIR" rev-parse --short HEAD 2>/dev/null || true)" \
+    RECORD_UNCOMMITTED="$(git -C "$TEST_REPO_DIR" status --porcelain -- lab machine 2>/dev/null | wc -l)" python3 -I -c '
 import json, os, sys
 
 def typed(value):
@@ -102,6 +106,8 @@ print(json.dumps({
     "test": os.environ["RECORD_TEST"],
     "question": os.environ["RECORD_QUESTION"],
     "started_at": os.environ["RECORD_STARTED_AT"],
+    "repo_commit": os.environ.get("RECORD_COMMIT") or None,
+    "uncommitted_script_files": int(os.environ.get("RECORD_UNCOMMITTED") or 0),
     "facts": facts,
     "machine": machine,
 }, indent=2))' >"$run_dir/result.json"
