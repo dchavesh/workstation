@@ -1,0 +1,94 @@
+#!/usr/bin/env python3
+"""Print a description of this machine as JSON, for agents and for run records.
+
+Generated from the machine itself, never written by hand. Read-only.
+"""
+import json
+import os
+import platform
+import subprocess
+
+SCHEMA_VERSION = 1
+COMMAND_TIMEOUT_SECONDS = 20
+KIB_PER_MIB = 1024
+SANDBOX_COMMANDS = {
+    "bubblewrap": ["bwrap", "--version"],
+    "socat": ["socat", "-V"],
+    "ripgrep": ["rg", "--version"],
+    "sandbox_runtime": ["/usr/bin/node", "/usr/local/bin/srt", "--version"],
+}
+
+
+def run(command):
+    """Return a command's stdout, or an empty string if it cannot run."""
+    try:
+        result = subprocess.run(
+            command, capture_output=True, text=True, timeout=COMMAND_TIMEOUT_SECONDS, check=False
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return ""
+    return result.stdout.strip()
+
+
+def version_line(text):
+    """Return the first line that carries a version number, or None."""
+    for line in text.splitlines():
+        if any(character.isdigit() for character in line):
+            return line.strip()
+    return None
+
+
+def key_value_file(path, separator):
+    try:
+        with open(path, encoding="utf-8") as handle:
+            pairs = (line.strip().split(separator, 1) for line in handle if separator in line)
+            return {key.strip(): value.strip().strip('"') for key, value in pairs}
+    except OSError:
+        return {}
+
+
+def memory_mib():
+    info = key_value_file("/proc/meminfo", ":")
+
+    def mib(name):
+        value = info.get(name, "").split()
+        return int(value[0]) // KIB_PER_MIB if value else None
+
+    return {"total": mib("MemTotal"), "available": mib("MemAvailable")}
+
+
+def mise_tools():
+    try:
+        listing = json.loads(run(["mise", "ls", "--current", "--json"]) or "{}")
+    except json.JSONDecodeError:
+        return {}
+    return {name: entries[0].get("version") for name, entries in sorted(listing.items()) if entries}
+
+
+def docker_state():
+    return {
+        "version": version_line(run(["docker", "--version"])),
+        "running": run(["systemctl", "is-active", "docker.service"]) == "active",
+        "wakes_on_first_use": run(["systemctl", "is-enabled", "docker.socket"]) == "enabled",
+    }
+
+
+def main():
+    description = {
+        "schema_version": SCHEMA_VERSION,
+        "os": key_value_file("/etc/os-release", "=").get("PRETTY_NAME"),
+        "kernel": platform.release(),
+        "wsl": "microsoft" in platform.release().lower(),
+        "processors": os.cpu_count(),
+        "memory_mib": memory_mib(),
+        "tmp_filesystem": run(["findmnt", "-no", "FSTYPE", "-T", "/tmp"]) or None,
+        "gpu": version_line(run(["nvidia-smi", "--query-gpu=name,memory.total", "--format=csv,noheader"])),
+        "tools": mise_tools(),
+        "sandbox": {name: version_line(run(command)) for name, command in SANDBOX_COMMANDS.items()},
+        "docker": docker_state(),
+    }
+    print(json.dumps(description, indent=2))
+
+
+if __name__ == "__main__":
+    main()

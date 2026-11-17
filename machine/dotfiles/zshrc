@@ -1,0 +1,27 @@
+# Interactive settings only. PATH and tools are set in ~/.zshenv, so that
+# non-interactive shells (agents, scripts, services) get them too.
+#
+# Rules for this file:
+#   - It prints nothing and asks nothing.
+#   - It never renames a standard command (no alias for ls, cat, grep, ...).
+#   - A missing package must not produce an error: every source is guarded.
+
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=50000
+SAVEHIST=50000
+setopt share_history hist_ignore_dups hist_ignore_space interactive_comments auto_cd
+
+bindkey -e
+
+autoload -Uz compinit && compinit
+
+source_if_present() { [[ -r "$1" ]] && source "$1"; }
+source_if_present /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source_if_present /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+unfunction source_if_present
+
+(( $+commands[starship] )) && eval "$(starship init zsh)"
+
+# New names only.
+alias ll='ls -l'
+alias la='ls -la'

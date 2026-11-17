@@ -1,0 +1,105 @@
+# The machine, described once. ~/.config/mise is a symlink to this directory,
+# so this file is mise's global config and every change to it shows in git.
+#
+#   First run:  machine/install.sh [environment]
+#   Apply:      mise bootstrap
+#   Drift:      mise bootstrap status --missing
+#   Health:     machine/verify.sh
+#
+# Nothing here depends on WSL. WSL-only parts live in config.wsl.toml.
+
+[settings]
+lockfile = true # versions come from mise.lock, not from "latest"
+paranoid = true # a repo's config runs nothing until its exact contents are approved
+
+# --- apt sources ------------------------------------------------------------
+
+[bootstrap.apt.sources.docker]
+uris = "https://download.docker.com/linux/ubuntu"
+components = "stable"
+key = "https://download.docker.com/linux/ubuntu/gpg"
+fingerprint = "9DC858229FC7DD38854AE2D88D81803C0EBFCD88"
+
+# Claude Code's own signed repository, stable channel. apt installs never
+# update themselves, so the version only moves when this machine is upgraded.
+# This repo installs the agent; it does not configure it (that is Daedalus).
+[bootstrap.apt.sources.claude-code]
+uris = "https://downloads.claude.ai/claude-code/apt/stable"
+suites = "stable"
+components = "main"
+key = "https://downloads.claude.ai/keys/claude-code.asc"
+fingerprint = "31DDDE24DDFAB679F42D7BD2BAA929FF1A7ECACE"
+
+# --- system packages --------------------------------------------------------
+
+[bootstrap.packages]
+# The agent
+"apt:claude-code" = "latest"
+# Shell
+"apt:zsh" = "latest"
+"apt:zsh-autosuggestions" = "latest"
+"apt:zsh-syntax-highlighting" = "latest"
+# Sandbox for agents: what Anthropic's sandbox runtime needs, owned by root
+"apt:bubblewrap" = "latest"
+"apt:socat" = "latest"
+"apt:ripgrep" = "latest"
+"apt:nodejs" = "latest"
+"apt:npm" = "latest"
+# Containers
+"apt:docker-ce" = "latest"
+"apt:docker-ce-cli" = "latest"
+"apt:containerd.io" = "latest"
+"apt:docker-buildx-plugin" = "latest"
+"apt:docker-compose-plugin" = "latest"
+# Everyday
+"apt:git" = "latest"
+"apt:curl" = "latest"
+"apt:jq" = "latest"
+"apt:unzip" = "latest"
+"apt:build-essential" = "latest"
+
+# --- system services --------------------------------------------------------
+
+# Docker sleeps until the first docker command wakes it through this socket.
+# (The daemon itself is only disabled at boot, in the hook below: declaring it
+# "stopped" here would make every later `mise bootstrap` kill running containers.)
+[bootstrap.services."docker.socket"]
+enabled = true
+state = "running"
+
+# --- steps mise has no exact section for ------------------------------------
+
+[bootstrap.hooks.post-packages]
+description = "sandbox runtime, /tmp on disk, docker asleep, login shell, linger"
+run = '"${XDG_CONFIG_HOME:-$HOME/.config}/mise/system/post-packages.sh"'
+
+# --- the user's shell -------------------------------------------------------
+
+[bootstrap.user]
+login_shell = "zsh"
+
+# Tools on PATH for every zsh, including the non-interactive ones agents start.
+[bootstrap.mise_shell_activate]
+zshenv = true
+
+[dotfiles]
+"~/.zshrc" = { source = "dotfiles/zshrc", mode = "symlink" }
+"~/.gitconfig" = { source = "dotfiles/gitconfig", mode = "symlink" }
+# The same PATH for services started by systemd for the user.
+"~/.config/environment.d/10-mise.conf" = { source = "dotfiles/environment.d/10-mise.conf", mode = "symlink" }
+"~/.zshenv/local-bin" = { block = '''
+typeset -U path
+path=("$HOME/.local/bin" $path)
+''' }
+
+# --- tools ------------------------------------------------------------------
+
+[tools]
+node = "lts"
+uv = "latest"
+gh = "latest"
+glab = "latest"
+just = "latest"
+pre-commit = "latest"
+gitleaks = "latest"
+starship = "latest"

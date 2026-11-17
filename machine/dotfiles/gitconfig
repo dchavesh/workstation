@@ -1,0 +1,21 @@
+# Git over HTTPS with the forge's own CLI as credential helper; no SSH keys.
+# Which account answers is decided by the directory: each identity directory
+# under ~/projects has a mise.toml that points gh/glab at that identity's
+# login. Outside those directories there is no token, so nothing is pushed
+# under the wrong name.
+
+[init]
+	defaultBranch = main
+
+[credential "https://github.com"]
+	helper =
+	helper = !gh auth git-credential
+
+[credential "https://gitlab.com"]
+	helper =
+	helper = !glab auth git-credential
+
+# Name and email per identity directory. Kept out of this repo because the
+# values are private; git skips the file silently when it does not exist.
+[include]
+	path = ~/.config/git/identities

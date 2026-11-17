@@ -1,0 +1,31 @@
+# WSL-only parts of the machine. Loaded when MISE_ENV=wsl, which install.sh
+# sets once and the .zshenv block below keeps.
+
+[bootstrap.files."/etc/wsl.conf"]
+owner = "root"
+group = "root"
+mode = "0644"
+template = true
+content = """
+[boot]
+systemd=true
+initTimeout=60000
+
+[interop]
+appendWindowsPath=false
+
+[user]
+default={{ exec(command="id -un") }}
+"""
+
+[dotfiles]
+"~/.zshenv/mise-env" = { block = '''
+export MISE_ENV=wsl
+''' }
+# Windows programs are off PATH (appendWindowsPath=false). These are the ones
+# wanted by name; anything else can still be started by its full path.
+"~/.local/bin/powershell.exe" = { source = "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe", mode = "symlink" }
+"~/.local/bin/cmd.exe" = { source = "/mnt/c/Windows/System32/cmd.exe", mode = "symlink" }
+"~/.local/bin/wsl.exe" = { source = "/mnt/c/Windows/System32/wsl.exe", mode = "symlink" }
+"~/.local/bin/explorer.exe" = { source = "/mnt/c/Windows/explorer.exe", mode = "symlink" }
+"~/.local/bin/clip.exe" = { source = "/mnt/c/Windows/System32/clip.exe", mode = "symlink" }
