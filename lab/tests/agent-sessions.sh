@@ -88,6 +88,23 @@ rm -rf "$WORK"
 IN_LAB
 }
 
+# 5. Control: is it linger that keeps the work alive? Linger is switched off
+# for one wait and switched back on, also if the test fails.
+set_linger() { echo "loginctl $1-linger \"\$(awk -F= '/^default=/{print \$2}' /etc/wsl.conf)\""; }
+linger_off() { set_linger disable; }
+linger_on() { set_linger enable; }
+start_without_linger() { common; echo 'start_unit; sleep 2; fact without_linger_started "$(yes_no unit_running)"'; }
+after_gap_without_linger() {
+  common
+  cat <<'IN_LAB'
+fact without_linger_after_gap_still_running "$(yes_no unit_running)"
+fact without_linger_after_gap_longest_pause_s "$(longest_pause)"
+fact without_linger_heartbeats_written "$(beats)"
+systemctl --user stop "$UNIT" >/dev/null 2>&1
+rm -rf "$WORK"
+IN_LAB
+}
+
 lab_state() { wsl.exe --list --verbose </dev/null 2>&1 | tr -d '\0\r' | awk -v name="$TEST_LAB_NAME" '$1 == name || $2 == name {print $(NF - 1)}'; }
 
 main() {
@@ -109,6 +126,19 @@ main() {
   as_user after_gap_with_one_session_open
   host_fact distro_state_after_gap_with_one_session_open "$state"
   wait
+
+  # Control: nothing of the agent's is running and no terminal is attached.
+  sleep "$GAP_SECONDS"
+  host_fact distro_state_after_gap_with_nothing_running "$(lab_state)"
+
+  trap 'as_root linger_on >/dev/null 2>&1 || true' EXIT
+  as_root linger_off
+  as_user start_without_linger
+  sleep "$GAP_SECONDS"
+  state="$(lab_state)"
+  as_user after_gap_without_linger
+  host_fact distro_state_after_gap_without_linger "$state"
+  as_root linger_on
 
   write_test_record "$TEST_NAME" "$QUESTION"
 }
