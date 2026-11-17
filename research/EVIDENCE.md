@@ -13,8 +13,8 @@ chat, or as an agent's word.
   research page named, but the commands were not saved. Today the only raw
   record is the session transcript. These are the weak entries.
 
-**State of the evidence:** 35 entries. 18 are backed by a script or a check,
-5 are reading with sources, 12 are one-off.
+**State of the evidence:** 35 entries. 19 are backed by a script or a check,
+5 are reading with sources, 11 are one-off.
 
 **Data files:** since 2026-11-16 every rehearsal writes a record under
 `data/runs/<time>-rehearsal/` (the steps and their durations, every check
@@ -58,7 +58,7 @@ that gap is the next piece of work (see the end of this page).
 | T17 | 16 Nov | What does a sandboxed process see of Windows? | Files readable, not writable; programs do not start | script + **data**: `lab/tests/sandbox-windows.sh` |
 | T18 | 16 Nov | Does one command build the machine from an empty image? | Before: 14–15 checks fail. Install 103–186 s. After: every check passes. Second apply changes nothing. Lock file unchanged | script + **data**: `lab/rehearse.sh`, records in `data/runs/` |
 | T19 | 16 Nov | Does Claude Code install from its own apt repository without touching its config? | 2.1.311 in 8 s; `~/.claude` not created | check ("a clean shell finds all tools"); the `~/.claude` part one-off |
-| T20 | 16 Nov | Does a browser work locally for agents? | Outside the sandbox: yes. Inside: only with its inner sandbox off, and it did not exit by itself | one-off → `06-capabilities.md`. **Inconclusive**, needs a proper test |
+| T20 | 16–17 Nov | Does a browser work locally for agents, also inside the sandbox? | Yes. Outside: loads in 0.3–0.5 s. Inside: a listed site loads in 0.3 s, an unlisted one is refused, and the browser exits by itself, under three conditions (inner sandbox off, proxy credentials passed separately, `TMPDIR` created). The first attempt by hand was inconclusive | script + **data**: `lab/tests/browser.sh` (record includes `inside-sandbox.png`) |
 | T21 | 16 Nov | What does Ubuntu's `npm` package bring with it? | 373 `node-*` packages, 92 MB | script + **data**: `lab/tests/npm-package-weight.sh` |
 | T22 | 16 Nov | Does the Windows install script read a machine's state correctly without changing it? | Dry run on the PC: found winget, WSL, the lab distro and its user; would write `.wslconfig` with 9 GB; reported Chrome as missing although it is installed (winget cannot see that install). **The apply path has never run** | script: `windows/install.ps1 -DryRun`; apply is for the laptop (`windows/LAPTOP-TEST.md`) |
 | T23 | 16 Nov | Can an Android emulator run inside WSL with no window, driven from the command line? | Yes: Android 15 booted in 36 s with KVM, used 3.3 GB of memory, answered a key press and a tap, and gave a screenshot. The SDK takes 4.8 GB | script + **data**: `lab/tests/android-emulator.sh` (record includes `screen.png`) |
@@ -86,13 +86,13 @@ that gap is the next piece of work (see the end of this page).
 
 ## The gap, and what closes it
 
-- Twelve entries are still one-off. Six are observations of the old machine
+- Eleven entries are still one-off. Six are observations of the old machine
   and of Windows (I2, I7, M1-M4): they describe a state at one moment and are
   not repeated. T5, T8 and T10 concern things the design no longer uses
   (Ubuntu 24.04's `/tmp` rule, the first trial, the SSH agent). T11 and T12
   are now covered by `machine/describe` and by a health check.
-- **T20, the browser inside the sandbox, is the one open test.** It needs a
-  proper test driven by Playwright before anything relies on it.
+- No lab test is open as inconclusive. Each record now carries the commit of
+  the scripts that produced it.
 - T19 has no check of its own for "installing Claude Code creates no
   `~/.claude`"; it should become a step of the rehearsal.
 - `lab/tests/run-all.sh` runs the nine converted tests in one go; each writes

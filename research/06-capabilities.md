@@ -69,21 +69,34 @@ belongs in an opt-in profile, not in the base install. Not tested: a real
 phone (over Wi-Fi with `adb`, or over USB), the emulator's own window, and
 whether a sandboxed agent can reach `adb`.
 
-Browser, tested in the lab on 2026-11-16 with Playwright's headless Chromium
-(installed in 21 s, 287 MB):
+Browser, tested in the lab on 2026-11-17 (`lab/tests/browser.sh`, records
+with a screenshot in `data/runs/`). A Playwright script opens a page, reads
+its title, takes a screenshot and closes the browser. Headless Chromium
+installs in 17 s and takes 287 MB.
 
-| Where | Result |
-|-------|--------|
-| Outside the sandbox | page loaded |
-| Inside `srt`, browser's own inner sandbox on | no page |
-| Inside `srt`, inner sandbox off (`--no-sandbox`), site on the allowlist | page loaded, but the browser did not exit by itself and had to be stopped |
-| Inside `srt`, site not on the allowlist | no page |
+| Situation | Page loaded | Time | Exited by itself |
+|-----------|-------------|------|------------------|
+| Outside the sandbox | yes | 0.3–0.5 s | yes |
+| Inside, site on the list | **yes** | 0.3 s | yes, no process left |
+| Inside, site not on the list | no, refused at once | 0.1 s | yes |
+| Inside, Chromium's own inner sandbox left on | no, the browser does not start | — | yes |
+| Inside, proxy address passed as the sandbox announces it | no, times out | 20 s | yes |
 
-So a browser for agents is a local matter: it works outright in a supervised
-session, and can work inside the sandbox with the allowlist still applied.
-The clean-exit problem needs a proper test driven by Playwright before it is
-relied on. Containers are local too: Docker Engine is in the base and wakes
-on first use (`01-host-and-boot.md`).
+So an agent can drive a browser inside the sandbox, and the website list
+still applies to it. Three conditions, found by the test:
+
+1. **Chromium's inner sandbox must be off** inside the agent sandbox (it is
+   Playwright's default on Linux). The outer sandbox is then the only fence.
+2. **The proxy's user and password must be passed separately.** The sandbox
+   announces its proxy as `http://user:password@localhost:3128`, and Chromium
+   ignores credentials written inside the address.
+3. **The sandbox's temporary directory must exist.** `TMPDIR` points to
+   `/tmp/claude`, which is not there on a first run; Playwright fails at
+   launch until it is created.
+
+This replaces the first, inconclusive attempt, in which the browser was
+started by hand and did not exit. Containers are local too: Docker Engine is
+in the base and wakes on first use (`01-host-and-boot.md`).
 
 The research pass found the IDs did *not* match in the daily distro while the
 lab was also running (`/dev/kvm` owned by group 991, where that distro's `kvm`

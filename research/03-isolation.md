@@ -137,6 +137,12 @@ What follows for the machine layer:
   do not start. To pass on to Daedalus: decide which parts of `/mnt/c` go on
   the deny list.
 
+- **A browser works inside the sandbox** under three conditions (inner
+  Chromium sandbox off, proxy credentials passed separately, `TMPDIR`
+  created first). Details and data: `06-capabilities.md`,
+  `lab/tests/browser.sh`. To pass on to Daedalus for any skill or tool that
+  drives a browser in an unattended run.
+
 These checks now run on every machine as part of `machine/verify.sh`.
 
 ## Still to run on this side
