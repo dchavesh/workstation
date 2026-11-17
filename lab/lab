@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+# Creates, provisions, measures and destroys the throwaway `lab` WSL distro.
+# Runs from the daily distro and drives WSL through wsl.exe.
+#
+#   lab/lab status              show whether the lab exists and which distro is the default
+#   lab/lab create              install the lab and create the login user
+#   lab/lab stop                shut the lab down, so the next command boots it cold
+#   lab/lab measure             print the lab's baseline report
+#   lab/lab root <script.sh> [args]   run a script inside the lab as root
+#   lab/lab user <script.sh> [args]   run a script inside the lab as the login user
+#   lab/lab destroy             delete the lab and everything in it
+set -euo pipefail
+
+# Fixed on purpose. `destroy` unregisters this name and nothing else, so it can
+# never be pointed at the daily distro by a typo or a stray argument.
+readonly LAB_NAME="lab"
+readonly LAB_RELEASE="Ubuntu-26.04"
+readonly LAB_USER="${USER:?USER is not set}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly SCRIPT_DIR
+
+die() { echo "lab: $*" >&2; exit 1; }
+
+# wsl.exe prints its own messages (stdout and stderr) in UTF-16; strip the
+# padding so they can be read and parsed.
+wsl_text() { wsl.exe "$@" 2>&1 </dev/null | tr -d '\0\r'; }
+
+lab_exists() { wsl_text --list --quiet | grep -qx "$LAB_NAME"; }
+
+default_distro() { wsl_text --list --verbose | awk '$1 == "*" {print $2}'; }
+
+require_lab() { lab_exists || die "no distro named '$LAB_NAME'; run: lab/lab create"; }
+
+# Runs the script on stdin inside the lab as the given Linux user.
+run_in_lab() {
+  local linux_user="$1"; shift
+  wsl.exe --distribution "$LAB_NAME" --user "$linux_user" --cd / -- bash -s -- "$@"
+}
+
+run_script() {
+  local linux_user="$1" script="${2:-}"
+  [[ -n "$script" ]] || die "usage: lab/lab <root|user> <script.sh> [args...]"
+  [[ -r "$script" ]] || die "cannot read script: $script"
+  shift 2
+  require_lab
+  run_in_lab "$linux_user" "$@" < "$script"
+}
+
+cmd_status() {
+  echo "default distro: $(default_distro)"
+  if lab_exists; then echo "lab: present"; else echo "lab: absent"; fi
+  wsl_text --list --verbose
+}
+
+cmd_create() {
+  lab_exists && die "'$LAB_NAME' already exists; run: lab/lab destroy"
+  wsl_text --install "$LAB_RELEASE" --name "$LAB_NAME" --no-launch
+  run_in_lab root "$LAB_USER" < "$SCRIPT_DIR/provision-user.sh"
+  cmd_stop
+  echo "lab: created with login user '$LAB_USER'"
+}
+
+cmd_stop() {
+  require_lab
+  wsl_text --terminate "$LAB_NAME"
+}
+
+cmd_destroy() {
+  require_lab
+  [[ "$(default_distro)" != "$LAB_NAME" ]] || die "refusing: '$LAB_NAME' is the default distro"
+  wsl_text --unregister "$LAB_NAME"
+}
+
+main() {
+  local command="${1:-}"
+  [[ $# -gt 0 ]] && shift
+  case "$command" in
+    status)  cmd_status ;;
+    create)  cmd_create ;;
+    stop)    cmd_stop ;;
+    measure) require_lab; run_in_lab root < "$SCRIPT_DIR/measure.sh" ;;
+    root)    run_script root "$@" ;;
+    user)    run_script "$LAB_USER" "$@" ;;
+    destroy) cmd_destroy ;;
+    *)       die "usage: lab/lab <status|create|stop|measure|root|user|destroy>" ;;
+  esac
+}
+
+main "$@"
