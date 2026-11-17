@@ -118,7 +118,11 @@ run_case() {
 }
 
 in_sandbox() { /usr/bin/node /usr/local/bin/srt --settings sandbox.json -c "$1" 2>/dev/null; }
-fact sandbox_temporary_directory "$(in_sandbox 'echo "$TMPDIR"')"
+# /tmp is on disk, so a directory left by an earlier run would still be there.
+# Remove it to see what a first run finds.
+readonly SANDBOX_TMPDIR="$(in_sandbox 'echo "$TMPDIR"')"
+[[ "$SANDBOX_TMPDIR" == /tmp/* ]] && rm -rf "$SANDBOX_TMPDIR"
+fact sandbox_temporary_directory "$SANDBOX_TMPDIR"
 fact sandbox_temporary_directory_exists_at_start "$(yes_no in_sandbox 'test -d "$TMPDIR"')"
 
 run_case outside_inner_off outside "$ALLOWED_SITE" off
